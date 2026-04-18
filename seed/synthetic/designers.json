@@ -1,0 +1,112 @@
+[
+  {
+    "fullName": "Priya Nair",
+    "email": "priya.nair@example.com",
+    "level": "601",
+    "discipline": "product",
+    "productArea": "servicing_platforms",
+    "startDate": "2019-10-01",
+    "currentStatus": "active"
+  },
+  {
+    "fullName": "Marcus Webb",
+    "email": "marcus.webb@example.com",
+    "level": "601",
+    "discipline": "product",
+    "productArea": "client_platforms",
+    "startDate": "2017-02-15",
+    "currentStatus": "active"
+  },
+  {
+    "fullName": "Ling Chen",
+    "email": "ling.chen@example.com",
+    "level": "601",
+    "discipline": "product",
+    "productArea": "advisor_platforms",
+    "startDate": "2019-04-01",
+    "currentStatus": "active"
+  },
+  {
+    "fullName": "Daniel Osei",
+    "email": "daniel.osei@example.com",
+    "level": "601",
+    "discipline": "design_system",
+    "productArea": "connect_core",
+    "startDate": "2020-04-01",
+    "currentStatus": "active"
+  },
+  {
+    "fullName": "Sofia Reyes",
+    "email": "sofia.reyes@example.com",
+    "level": "602",
+    "discipline": "product",
+    "productArea": "advisor_platforms",
+    "startDate": "2019-01-12",
+    "currentStatus": "active"
+  },
+  {
+    "fullName": "James Thornton",
+    "email": "james.thornton@example.com",
+    "level": "602",
+    "discipline": "product",
+    "productArea": "advisor_platforms",
+    "startDate": "2016-12-01",
+    "currentStatus": "active"
+  },
+  {
+    "fullName": "Amara Diallo",
+    "email": "amara.diallo@example.com",
+    "level": "602",
+    "discipline": "product",
+    "productArea": "client_onboarding",
+    "startDate": "2016-12-01",
+    "currentStatus": "active"
+  },
+  {
+    "fullName": "Kevin Park",
+    "email": "kevin.park@example.com",
+    "level": "602",
+    "discipline": "product",
+    "productArea": "client_onboarding",
+    "startDate": "2016-04-01",
+    "currentStatus": "active"
+  },
+  {
+    "fullName": "Rachel Goldstein",
+    "email": "rachel.goldstein@example.com",
+    "level": "602",
+    "discipline": "research",
+    "productArea": "advisor_core",
+    "startDate": "2015-04-01",
+    "currentStatus": "active"
+  },
+  {
+    "fullName": "Tom Vasquez",
+    "email": "tom.vasquez@example.com",
+    "level": "602",
+    "discipline": "content",
+    "productArea": "shared",
+    "startDate": "2016-04-01",
+    "currentStatus": "active"
+  },
+  {
+    "fullName": "Nadia Petrov",
+    "email": "nadia.petrov@example.com",
+    "level": "602",
+    "discipline": "content",
+    "productArea": "servicing_platforms",
+    "startDate": "2018-04-01",
+    "currentStatus": "active"
+  },
+  {
+    "fullName": "Ethan Cho",
+    "email": "ethan.cho@example.com",
+    "level": "601",
+    "discipline": "visual",
+    "productArea": "client_platforms",
+    "startDate": "2024-01-15",
+    "currentStatus": "departing",
+    "lastWorkingDay": "2026-06-30",
+    "statusVisibility": "owner_only"
+  }
+]

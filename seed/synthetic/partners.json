@@ -1,0 +1,50 @@
+[
+  {
+    "fullName": "Alex Rivera",
+    "email": "alex.rivera@example.com",
+    "role": "project_lead",
+    "orgOrTeam": "Engineering Org A"
+  },
+  {
+    "fullName": "Brendan Walsh",
+    "email": "brendan.walsh@example.com",
+    "role": "project_lead",
+    "orgOrTeam": "Engineering Org B"
+  },
+  {
+    "fullName": "Christina Yuen",
+    "email": "christina.yuen@example.com",
+    "role": "project_lead",
+    "orgOrTeam": "Engineering Org C"
+  },
+  {
+    "fullName": "Derek Muñoz",
+    "email": "derek.munoz@example.com",
+    "role": "engineering_manager",
+    "orgOrTeam": "Platform Engineering"
+  },
+  {
+    "fullName": "Elena Sokolov",
+    "email": "elena.sokolov@example.com",
+    "role": "engineering_manager",
+    "orgOrTeam": "Core Services Engineering"
+  },
+  {
+    "fullName": "Frank Adeyemi",
+    "email": "frank.adeyemi@example.com",
+    "role": "product_manager",
+    "orgOrTeam": "Product Strategy"
+  },
+  {
+    "fullName": "Grace Kim",
+    "email": "grace.kim@example.com",
+    "role": "peer_designer",
+    "orgOrTeam": "Design Chapter"
+  },
+  {
+    "fullName": "Henry Blackwood",
+    "email": "henry.blackwood@example.com",
+    "role": "client",
+    "orgOrTeam": "Wealth Management"
+  }
+]

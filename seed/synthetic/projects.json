@@ -1,0 +1,45 @@
+[
+  {
+    "projectName": "Advisor Onboarding Redesign",
+    "status": "in_progress",
+    "startDate": "2026-01-15",
+    "strategicWeight": 4,
+    "description": "End-to-end redesign of the advisor onboarding flow."
+  },
+  {
+    "projectName": "Client Portal v3",
+    "status": "in_progress",
+    "startDate": "2025-10-01",
+    "strategicWeight": 5,
+    "description": "Major version upgrade to the client-facing portal."
+  },
+  {
+    "projectName": "Design System Tokens 2.0",
+    "status": "in_progress",
+    "startDate": "2026-02-01",
+    "strategicWeight": 3,
+    "description": "Unified token system across all product surfaces."
+  },
+  {
+    "projectName": "Billing Portal Refresh",
+    "status": "shipped",
+    "startDate": "2025-07-01",
+    "endDate": "2026-02-28",
+    "strategicWeight": 3,
+    "description": "Redesigned billing portal shipped Feb 2026."
+  },
+  {
+    "projectName": "Servicing Hub Consolidation",
+    "status": "planned",
+    "startDate": "2026-05-01",
+    "strategicWeight": 4,
+    "description": "Consolidate three servicing surfaces into one hub."
+  },
+  {
+    "projectName": "Research Ops Tooling",
+    "status": "paused",
+    "startDate": "2025-09-01",
+    "strategicWeight": 2,
+    "description": "Internal tooling to streamline research repository."
+  }
+]

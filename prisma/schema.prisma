@@ -1,11 +1,935 @@
 // Design Team Intelligence System — Prisma schema
-// Full 21-entity schema implemented in Phase 1 (Prompt 1).
-// This is the Phase 0 stub — datasource + generator only.
+// 21 entities from DATA_DICTIONARY.md — Phase 1
 
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  previewFeatures = ["driverAdapters"]
 }
 
 datasource db {
   provider = "sqlite"
+}
+
+// ─── Enums ────────────────────────────────────────────────────────────────────
+
+enum Discipline {
+  product
+  design_system
+  content
+  research
+  visual
+}
+
+enum ProductArea {
+  servicing_platforms
+  client_platforms
+  advisor_platforms
+  client_onboarding
+  advisor_core
+  connect_core
+  shared
+}
+
+enum DesignerStatus {
+  active
+  on_leave
+  departing
+  departed
+}
+
+enum StatusVisibility {
+  public
+  owner_only
+}
+
+enum PartnerRole {
+  project_lead
+  engineering_manager
+  product_manager
+  client
+  peer_designer
+  cross_functional
+}
+
+enum ProjectStatus {
+  planned
+  in_progress
+  shipped
+  dropped
+  paused
+}
+
+enum AssignmentRole {
+  lead
+  contributor
+  support
+  reviewer
+}
+
+enum ImpactDimension {
+  craft_quality
+  business_outcome
+  team_multiplier
+  client_trust
+  innovation
+  delivery_reliability
+  mentorship
+}
+
+enum ImpactMagnitude {
+  small
+  meaningful
+  significant
+  exceptional
+}
+
+enum FeedbackSource {
+  self
+  peer
+  manager
+  project_lead
+  client
+  stakeholder
+}
+
+enum Sentiment {
+  positive
+  neutral
+  needs_improvement
+}
+
+enum FeedbackTheme {
+  craft
+  communication
+  ownership
+  collaboration
+  leadership
+  delivery
+  growth
+}
+
+enum Confidence {
+  low
+  medium
+  high
+}
+
+enum PersonalityConfidence {
+  tentative
+  observed
+  confirmed
+}
+
+enum SignalType {
+  engagement_drop
+  comp_concern
+  growth_blocked
+  interpersonal_friction
+  external_opportunity
+  personal_life_change
+}
+
+enum Severity {
+  low
+  med
+  high
+}
+
+enum RiskStatus {
+  open
+  mitigating
+  closed
+}
+
+enum IncidentSeverity {
+  minor
+  moderate
+  serious
+}
+
+enum HighlightKind {
+  standout_work
+  kudos
+  community
+  mentorship
+  speaking
+  learning
+  small_win
+  big_win
+}
+
+enum WinSize {
+  small
+  big
+}
+
+enum Visibility {
+  internal
+  external
+}
+
+enum ActivityKind {
+  design_jam
+  book_club
+  portfolio_review
+  meetup
+  brownbag
+  hack_day
+  mentorship_circle
+}
+
+enum ParticipationRole {
+  organizer
+  presenter
+  attendee
+}
+
+enum OneOnOneMood {
+  down
+  flat
+  steady
+  up
+  energized
+}
+
+enum HappinessSource {
+  self_reported
+  my_read
+}
+
+enum BlockerStatus {
+  open
+  unblocked
+  escalated
+  wont_fix
+}
+
+enum BlockerOwner {
+  designer
+  you
+  partner
+  other
+}
+
+enum ActionStatus {
+  open
+  in_progress
+  done
+  dropped
+  snoozed
+}
+
+enum ConcernTheme {
+  process
+  tooling
+  leadership
+  cross_team
+  morale
+  comp_fairness
+  workload
+  career_growth
+}
+
+enum ConcernSeverity {
+  low
+  med
+  high
+}
+
+enum ConcernStatus {
+  noted
+  acting
+  resolved
+  archived
+}
+
+enum CheckinStatus {
+  upcoming
+  in_progress
+  complete
+  skipped
+  overdue
+}
+
+enum Quarter {
+  Q1
+  Q2
+  Q3
+  Q4
+}
+
+enum CycleStatus {
+  planned
+  outreach_sent
+  collecting
+  summarizing
+  complete
+}
+
+enum OutreachStatus {
+  not_started
+  drafts_ready
+  sent
+  responses_in
+  closed
+}
+
+enum OutreachRowStatus {
+  draft
+  approved
+  sent
+  responded
+  no_response
+  skipped
+}
+
+enum ReviewFinalStatus {
+  draft
+  signed_off
+}
+
+enum EmailStatus {
+  new
+  processed
+  archived
+}
+
+enum RowSource {
+  manual_form
+  ai_extracted
+  ai_extracted_edited
+  imported
+}
+
+// ─── Group 1: People & framework ─────────────────────────────────────────────
+
+model Designer {
+  id                    String           @id @default(cuid())
+  createdAt             DateTime         @default(now())
+  updatedAt             DateTime         @updatedAt
+  source                RowSource        @default(manual_form)
+  createdBy             String           @default("owner")
+
+  fullName              String
+  preferredName         String?
+  email                 String           @unique
+  level                 String
+  discipline            Discipline
+  productArea           ProductArea
+  secondaryProductAreas String           @default("[]") // JSON array of ProductArea
+  startDate             DateTime
+  managerName           String?
+  currentStatus         DesignerStatus   @default(active)
+  statusVisibility      StatusVisibility @default(public)
+  lastWorkingDay        DateTime?
+  notes                 String?
+
+  archivedAt            DateTime?
+
+  // Relations
+  assignments           Assignment[]
+  impactEntries         ImpactEntry[]
+  feedback              Feedback[]
+  personalitySignals    PersonalitySignal[]
+  riskSignals           RiskSignal[]
+  behavioralIncidents   BehavioralIncident[]
+  highlights            Highlight[]
+  communityActivities   CommunityActivity[]
+  oneOnOnes             OneOnOne[]
+  blockers              Blocker[]
+  actionItems           ActionItem[]
+  teamConcerns          TeamConcern[]
+  biweeklyCheckins      BiweeklyCheckin[]
+  cycleReviews          CycleReview[]
+  outreach              Outreach[]
+
+  @@index([currentStatus])
+  @@index([productArea])
+}
+
+model Partner {
+  id              String      @id @default(cuid())
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+  source          RowSource   @default(manual_form)
+  createdBy       String      @default("owner")
+
+  fullName        String
+  email           String      @unique
+  role            PartnerRole
+  orgOrTeam       String?
+  active          Boolean     @default(true)
+  lastOutreachOn  DateTime?
+  responseRate    Float?
+  notes           String?
+
+  archivedAt      DateTime?
+
+  // Relations
+  feedback        Feedback[]
+  outreach        Outreach[]
+  projectsLed     Project[]   @relation("ProjectPrimaryPartner")
+}
+
+model Rubric {
+  id            String   @id @default(cuid())
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  source        RowSource @default(manual_form)
+  createdBy     String   @default("owner")
+
+  version       String   @unique
+  effectiveFrom DateTime
+  effectiveTo   DateTime?
+  dimensions    String   // JSON: RubricDimension[]
+  notes         String?
+
+  archivedAt    DateTime?
+
+  // Relations
+  cycleReviews  CycleReview[]
+}
+
+// ─── Group 2: Work ────────────────────────────────────────────────────────────
+
+model Project {
+  id               String        @id @default(cuid())
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
+  source           RowSource     @default(manual_form)
+  createdBy        String        @default("owner")
+
+  projectName      String
+  clientOrTeam     String?
+  startDate        DateTime
+  endDate          DateTime?
+  status           ProjectStatus @default(in_progress)
+  description      String?
+  strategicWeight  Int?
+  primaryPartnerId String?
+  tags             String        @default("[]") // JSON array
+
+  archivedAt       DateTime?
+
+  // Relations
+  primaryPartner   Partner?      @relation("ProjectPrimaryPartner", fields: [primaryPartnerId], references: [id])
+  assignments      Assignment[]
+  impactEntries    ImpactEntry[]
+  blockers         Blocker[]
+  outreach         Outreach[]
+
+  @@index([status])
+}
+
+// Fix circular ref: Project -> Partner needs explicit relation name
+// Adding a separate relation name to avoid Prisma implicit relation issue
+// (Outreach also refs Project indirectly)
+
+model Assignment {
+  id          String         @id @default(cuid())
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+  source      RowSource      @default(manual_form)
+  createdBy   String         @default("owner")
+
+  designerId  String
+  projectId   String
+  role        AssignmentRole
+  startDate   DateTime
+  endDate     DateTime?
+  partnerIds  String         @default("[]") // JSON array of partner IDs
+  notes       String?
+
+  archivedAt  DateTime?
+
+  // Relations
+  designer    Designer       @relation(fields: [designerId], references: [id])
+  project     Project        @relation(fields: [projectId], references: [id])
+  impactEntries ImpactEntry[]
+
+  @@index([designerId])
+  @@index([projectId])
+}
+
+model ImpactEntry {
+  id           String          @id @default(cuid())
+  createdAt    DateTime        @default(now())
+  updatedAt    DateTime        @updatedAt
+  source       RowSource       @default(manual_form)
+  createdBy    String          @default("owner")
+
+  designerId   String
+  assignmentId String?
+  projectId    String?
+  date         DateTime
+  dimension    ImpactDimension
+  summary      String
+  evidence     String?
+  magnitude    ImpactMagnitude
+  link         String?
+
+  archivedAt   DateTime?
+
+  // Relations
+  designer     Designer        @relation(fields: [designerId], references: [id])
+  assignment   Assignment?     @relation(fields: [assignmentId], references: [id])
+  project      Project?        @relation(fields: [projectId], references: [id])
+
+  @@index([designerId])
+  @@index([date])
+}
+
+// ─── Group 3: Signals & feedback ─────────────────────────────────────────────
+
+model Feedback {
+  id            String        @id @default(cuid())
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+  source        RowSource     @default(manual_form)
+  createdBy     String        @default("owner")
+
+  designerId    String
+  feedbackSource FeedbackSource
+  partnerId     String?
+  sentiment     Sentiment
+  theme         FeedbackTheme
+  summary       String
+  quote         String?
+  occurredOn    DateTime
+  inboxEmailId  String?
+  cycleId       String?
+  confidence    Confidence?
+
+  archivedAt    DateTime?
+
+  // Relations
+  designer      Designer      @relation(fields: [designerId], references: [id])
+  partner       Partner?      @relation(fields: [partnerId], references: [id])
+  inboxEmail    InboxEmail?   @relation(fields: [inboxEmailId], references: [id])
+  cycle         ReviewCycle?  @relation(fields: [cycleId], references: [id])
+  outreachResponse Outreach?  @relation("OutreachResponse")
+
+  @@index([designerId])
+  @@index([occurredOn])
+  @@index([cycleId])
+}
+
+model InboxEmail {
+  id                  String      @id @default(cuid())
+  createdAt           DateTime    @default(now())
+  updatedAt           DateTime    @updatedAt
+  source              RowSource   @default(manual_form)
+  createdBy           String      @default("owner")
+
+  pastedOn            DateTime    @default(now())
+  senderName          String?
+  senderEmail         String?
+  subject             String?
+  body                String
+  receivedOn          DateTime?
+  relatedDesignerIds  String      @default("[]") // JSON array
+  relatedProjectId    String?
+  status              EmailStatus @default(new)
+  rawHash             String      @unique
+
+  // Relations
+  feedback            Feedback[]
+  highlights          Highlight[]
+  riskSignals         RiskSignal[]
+
+  @@index([status])
+  @@index([rawHash])
+}
+
+model PersonalitySignal {
+  id          String                @id @default(cuid())
+  createdAt   DateTime              @default(now())
+  updatedAt   DateTime              @updatedAt
+  source      RowSource             @default(manual_form)
+  createdBy   String                @default("owner")
+
+  designerId  String
+  trait       String
+  evidence    String
+  lastUpdated DateTime              @default(now())
+  confidence  PersonalityConfidence
+
+  archivedAt  DateTime?
+
+  // Relations
+  designer    Designer              @relation(fields: [designerId], references: [id])
+
+  @@index([designerId])
+}
+
+// ─── Group 4: Recognition & culture ──────────────────────────────────────────
+
+model Highlight {
+  id           String        @id @default(cuid())
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  source       RowSource     @default(manual_form)
+  createdBy    String        @default("owner")
+
+  designerId   String
+  kind         HighlightKind
+  size         WinSize?
+  description  String
+  occurredOn   DateTime
+  visibility   Visibility    @default(internal)
+  evidenceLink String?
+  inboxEmailId String?
+
+  archivedAt   DateTime?
+
+  // Relations
+  designer     Designer      @relation(fields: [designerId], references: [id])
+  inboxEmail   InboxEmail?   @relation(fields: [inboxEmailId], references: [id])
+
+  @@index([designerId])
+  @@index([occurredOn])
+}
+
+model CommunityActivity {
+  id         String            @id @default(cuid())
+  createdAt  DateTime          @default(now())
+  updatedAt  DateTime          @updatedAt
+  source     RowSource         @default(manual_form)
+  createdBy  String            @default("owner")
+
+  designerId String?
+  activity   ActivityKind
+  title      String
+  date       DateTime
+  role       ParticipationRole?
+  notes      String?
+
+  archivedAt DateTime?
+
+  // Relations
+  designer   Designer?         @relation(fields: [designerId], references: [id])
+
+  @@index([designerId])
+  @@index([date])
+}
+
+// ─── Group 5: 1:1 and relationship management ─────────────────────────────────
+
+model OneOnOne {
+  id               String          @id @default(cuid())
+  createdAt        DateTime        @default(now())
+  updatedAt        DateTime        @updatedAt
+  source           RowSource       @default(manual_form)
+  createdBy        String          @default("owner")
+
+  designerId       String
+  date             DateTime
+  durationMinutes  Int?
+  mood             OneOnOneMood?
+  happinessIndex   Int?
+  happinessSource  HappinessSource?
+  topicsDiscussed  String
+  vibeNotes        String?         // owner-only, never exposed to director
+  nextMeetingOn    DateTime?
+
+  archivedAt       DateTime?
+
+  // Relations
+  designer         Designer        @relation(fields: [designerId], references: [id])
+  blockers         Blocker[]
+  actionItems      ActionItem[]
+  teamConcerns     TeamConcern[]
+
+  @@index([designerId])
+  @@index([date])
+}
+
+model Blocker {
+  id             String        @id @default(cuid())
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+  source         RowSource     @default(manual_form)
+  createdBy      String        @default("owner")
+
+  designerId     String
+  oneOnOneId     String?
+  projectId      String?
+  description    String
+  raisedOn       DateTime      @default(now())
+  status         BlockerStatus @default(open)
+  owner          BlockerOwner  @default(you)
+  resolvedOn     DateTime?
+  resolutionNote String?
+
+  archivedAt     DateTime?
+
+  // Relations
+  designer       Designer      @relation(fields: [designerId], references: [id])
+  oneOnOne       OneOnOne?     @relation(fields: [oneOnOneId], references: [id])
+  project        Project?      @relation(fields: [projectId], references: [id])
+
+  @@index([designerId])
+  @@index([status])
+}
+
+model ActionItem {
+  id          String       @id @default(cuid())
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  source      RowSource    @default(manual_form)
+  createdBy   String       @default("owner")
+
+  designerId  String?
+  oneOnOneId  String?
+  description String
+  dueDate     DateTime?
+  status      ActionStatus @default(open)
+  completedOn DateTime?
+  snoozedUntil DateTime?
+  notes       String?
+
+  archivedAt  DateTime?
+
+  // Relations
+  designer    Designer?    @relation(fields: [designerId], references: [id])
+  oneOnOne    OneOnOne?    @relation(fields: [oneOnOneId], references: [id])
+
+  @@index([designerId])
+  @@index([status])
+  @@index([dueDate])
+}
+
+model TeamConcern {
+  id                  String          @id @default(cuid())
+  createdAt           DateTime        @default(now())
+  updatedAt           DateTime        @updatedAt
+  source              RowSource       @default(manual_form)
+  createdBy           String          @default("owner")
+
+  raisedByDesignerId  String
+  oneOnOneId          String?
+  concern             String
+  theme               ConcernTheme
+  severity            ConcernSeverity
+  status              ConcernStatus   @default(noted)
+  actionTaken         String?
+  occurredOn          DateTime
+
+  archivedAt          DateTime?
+
+  // Relations
+  raisedBy            Designer        @relation(fields: [raisedByDesignerId], references: [id])
+  oneOnOne            OneOnOne?       @relation(fields: [oneOnOneId], references: [id])
+
+  @@index([raisedByDesignerId])
+  @@index([theme])
+  @@index([status])
+}
+
+// ─── Group 6: Sensitive ───────────────────────────────────────────────────────
+
+model RiskSignal {
+  id              String      @id @default(cuid())
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+  source          RowSource   @default(manual_form)
+  createdBy       String      @default("owner")
+
+  designerId      String
+  signalType      SignalType
+  severity        Severity
+  evidence        String
+  mitigationPlan  String?
+  detectedOn      DateTime    @default(now())
+  status          RiskStatus  @default(open)
+  autoDecayOn     DateTime
+  inboxEmailId    String?
+
+  archivedAt      DateTime?
+
+  // Relations
+  designer        Designer    @relation(fields: [designerId], references: [id])
+  inboxEmail      InboxEmail? @relation(fields: [inboxEmailId], references: [id])
+
+  @@index([designerId])
+  @@index([status])
+  @@index([autoDecayOn])
+}
+
+model BehavioralIncident {
+  id          String           @id @default(cuid())
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+  source      RowSource        @default(manual_form)
+  createdBy   String           @default("owner")
+
+  designerId  String
+  description String
+  severity    IncidentSeverity
+  actionTaken String
+  occurredOn  DateTime
+  resolved    Boolean          @default(false)
+  resolvedOn  DateTime?
+
+  archivedAt  DateTime?
+
+  // Relations
+  designer    Designer         @relation(fields: [designerId], references: [id])
+
+  @@index([designerId])
+}
+
+// ─── Group 7: Rhythms & reviews ───────────────────────────────────────────────
+
+model BiweeklyCheckin {
+  id                 String        @id @default(cuid())
+  createdAt          DateTime      @default(now())
+  updatedAt          DateTime      @updatedAt
+  source             RowSource     @default(manual_form)
+  createdBy          String        @default("owner")
+
+  designerId         String
+  biweekStart        DateTime
+  biweekEnd          DateTime
+  completedOn        DateTime?
+  status             CheckinStatus @default(upcoming)
+  sectionsTouched    String        @default("{}") // JSON: SectionsTouched
+  autoSurfacedFlags  String        @default("[]") // JSON: AutoFlag[]
+  notes              String?
+
+  archivedAt         DateTime?
+
+  // Relations
+  designer           Designer      @relation(fields: [designerId], references: [id])
+
+  @@unique([designerId, biweekStart])
+  @@index([designerId])
+  @@index([biweekStart])
+  @@index([status])
+}
+
+model ReviewCycle {
+  id              String      @id @default(cuid())
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+  source          RowSource   @default(manual_form)
+  createdBy       String      @default("owner")
+
+  year            Int
+  quarter         Quarter
+  checkinDate     DateTime
+  outreachOpenOn  DateTime
+  status          CycleStatus @default(planned)
+  notes           String?
+
+  archivedAt      DateTime?
+
+  // Relations
+  cycleReviews    CycleReview[]
+  outreach        Outreach[]
+  feedback        Feedback[]
+
+  @@unique([year, quarter])
+  @@index([status])
+}
+
+model CycleReview {
+  id                  String            @id @default(cuid())
+  createdAt           DateTime          @default(now())
+  updatedAt           DateTime          @updatedAt
+  source              RowSource         @default(manual_form)
+  createdBy           String            @default("owner")
+
+  designerId          String
+  cycleId             String
+  rubricVersion       String
+  outreachStatus      OutreachStatus    @default(not_started)
+  summaryMarkdown     String?
+  strengthsMarkdown   String?
+  improvementsMarkdown String?
+  rubricRating        String?           // JSON: { [dimensionId]: { rating, justification, confidence } }
+  riskWatch           String?
+  continuityNote      String?
+  finalStatus         ReviewFinalStatus @default(draft)
+  signedOffOn         DateTime?
+  exportedPdfPath     String?
+
+  archivedAt          DateTime?
+
+  // Relations
+  designer            Designer          @relation(fields: [designerId], references: [id])
+  cycle               ReviewCycle       @relation(fields: [cycleId], references: [id])
+  rubric              Rubric            @relation(fields: [rubricVersion], references: [version])
+
+  @@unique([designerId, cycleId])
+  @@index([designerId])
+  @@index([cycleId])
+  @@index([finalStatus])
+}
+
+model Outreach {
+  id                    String            @id @default(cuid())
+  createdAt             DateTime          @default(now())
+  updatedAt             DateTime          @updatedAt
+  source                RowSource         @default(manual_form)
+  createdBy             String            @default("owner")
+
+  cycleId               String
+  designerId            String
+  partnerId             String
+  status                OutreachRowStatus @default(draft)
+  subject               String?
+  body                  String?
+  sentOn                DateTime?
+  responseReceivedOn    DateTime?
+  responseFeedbackId    String?           @unique
+  reminderSentOn        DateTime?
+  projectId             String?
+
+  archivedAt            DateTime?
+
+  // Relations
+  cycle                 ReviewCycle       @relation(fields: [cycleId], references: [id])
+  designer              Designer          @relation(fields: [designerId], references: [id])
+  partner               Partner           @relation(fields: [partnerId], references: [id])
+  responseFeedback      Feedback?         @relation("OutreachResponse", fields: [responseFeedbackId], references: [id])
+  project               Project?          @relation(fields: [projectId], references: [id])
+
+  @@index([cycleId])
+  @@index([designerId])
+  @@index([partnerId])
+  @@index([status])
+}
+
+// ─── Audit log (infrastructure, not counted in the 21) ───────────────────────
+
+model AuditLog {
+  id              String    @id @default(cuid())
+  createdAt       DateTime  @default(now())
+
+  designerId      String?
+  jobName         String?
+  entityType      String?
+  entityId        String?
+  inputHash       String?
+  outputHash      String?
+  proposed        String?   // JSON
+  finalAccepted   String?   // JSON
+  acceptedAsIs    Boolean?
+  editedFields    String?   // JSON array
+  userAction      String?   // "accepted" | "edited" | "rejected"
+
+  @@index([designerId])
+  @@index([entityType, entityId])
+}
+
+// ─── Chat messages (optional infra) ──────────────────────────────────────────
+
+model ChatMessage {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+
+  role      String   // "user" | "assistant"
+  content   String
+  citations String   @default("[]") // JSON: { entityType, entityId }[]
 }
