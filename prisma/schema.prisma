@@ -1,11 +1,9 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Get a free hosted Postgres database in seconds: `npx create-db`
+// Design Team Intelligence System — Prisma schema
+// Full 21-entity schema implemented in Phase 1 (Prompt 1).
+// This is the Phase 0 stub — datasource + generator only.
 
 generator client {
-  provider = "prisma-client"
-  output   = "../src/generated/prisma"
+  provider = "prisma-client-js"
 }
 
 datasource db {
