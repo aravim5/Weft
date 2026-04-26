@@ -1,19 +1,33 @@
-// TODO: Phase 8/9/12 — cron worker for biweekly reminders, cycle reminders, decay signals
+// Cron worker — run with: npm run cron
+// Calls Next.js API routes so the app server must be running on port 3000
 import cron from "node-cron";
 
-console.log("Cron worker started.");
+const BASE = process.env.APP_URL ?? "http://localhost:3000";
 
-// Every Monday at 7am — biweekly check-in reminders
+async function callRoute(path: string) {
+  try {
+    const res = await fetch(`${BASE}${path}`, { method: "POST" });
+    const json = await res.json();
+    console.log(`[cron] ${path}`, json);
+  } catch (err) {
+    console.error(`[cron] ${path} failed:`, err);
+  }
+}
+
+console.log("Cron worker started. BASE:", BASE);
+
+// Every other Monday at 7am — biweekly check-in reminders
 cron.schedule("0 7 * * 1", () => {
-  console.log("[cron] biweekly-reminders — TODO: implement Phase 8");
+  const weekNum = Math.floor(Date.now() / (1000 * 60 * 60 * 24 * 7));
+  if (weekNum % 2 === 0) callRoute("/api/cron/biweekly-reminders");
 });
 
 // Daily at 2am — decay signal check
 cron.schedule("0 2 * * *", () => {
-  console.log("[cron] decay-signals — TODO: implement Phase 12");
+  callRoute("/api/cron/decay-signals");
 });
 
 // Every Monday at 8am — cycle countdown reminders
 cron.schedule("0 8 * * 1", () => {
-  console.log("[cron] cycle-reminders — TODO: implement Phase 9");
+  callRoute("/api/cron/cycle-reminders");
 });

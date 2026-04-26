@@ -9,7 +9,8 @@
     "lint": "eslint",
     "seed:synthetic": "tsx src/scripts/seed-synthetic.ts",
     "cron": "tsx src/workers/cron.ts",
-    "backup": "tsx src/scripts/backup.ts"
+    "backup": "tsx src/scripts/backup.ts",
+    "test:extract-email": "tsx src/scripts/test-extract-email.ts"
   },
   "prisma": {
     "seed": "tsx prisma/seed.ts"
@@ -20,6 +21,8 @@
     "@hookform/resolvers": "^5.2.2",
     "@prisma/adapter-better-sqlite3": "^7.7.0",
     "@prisma/client": "^7.7.0",
+    "@radix-ui/react-label": "^2.1.8",
+    "@radix-ui/react-slot": "^1.2.4",
     "better-sqlite3": "^12.9.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
@@ -37,6 +40,7 @@
     "react-dom": "19.2.4",
     "react-hook-form": "^7.72.1",
     "recharts": "^3.8.1",
+    "rrule": "^2.8.1",
     "shadcn": "^4.3.0",
     "sonner": "^2.0.7",
     "tailwind-merge": "^3.5.0",

@@ -1,5 +1,6 @@
 // Prompt B — load seed/synthetic/ data into the database
 import "dotenv/config";
+import crypto from "crypto";
 import fs from "fs";
 import path from "path";
 import { PrismaClient } from "@prisma/client";
@@ -125,6 +126,11 @@ async function main() {
   console.log("Seeding synthetic data...");
   console.log(`  DB: ${absolutePath}`);
 
+  // ── 0. Clear placeholder rows from prisma/seed.ts ───────────────────────────
+  await prisma.designer.deleteMany({ where: { email: { contains: "designer" } } });
+  await prisma.partner.deleteMany({ where: { email: { contains: "partner0" } } });
+  console.log("  ✓ Cleared placeholder designers and partners");
+
   // ── 1. Designers ────────────────────────────────────────────────────────────
   const rawDesigners = readJson<Array<{
     fullName: string; email: string; level: string; discipline: string;
@@ -217,14 +223,18 @@ async function main() {
 
   for (const email of emails) {
     // Create InboxEmail
-    const inbox = await prisma.inboxEmail.create({
-      data: {
-        fromName: email.from,
-        fromEmail: email.fromEmail,
-        rawBody: `From: ${email.from} <${email.fromEmail}>\nTo: ${email.to}\nDate: ${email.date}\nSubject: ${email.subject}\n\n${email.body}`,
+    const rawBody = `From: ${email.from} <${email.fromEmail}>\nTo: ${email.to}\nDate: ${email.date}\nSubject: ${email.subject}\n\n${email.body}`;
+    const rawHash = crypto.createHash("sha256").update(rawBody).digest("hex");
+    const inbox = await prisma.inboxEmail.upsert({
+      where: { rawHash },
+      update: {},
+      create: {
+        senderName: email.from,
+        senderEmail: email.fromEmail,
         subject: email.subject,
-        receivedAt: new Date(email.date),
-        processed: false,
+        body: rawBody,
+        receivedOn: new Date(email.date),
+        rawHash,
         source: "imported",
         createdBy: CREATED_BY,
       },
@@ -264,7 +274,6 @@ async function main() {
         theme: "collaboration",
         summary: email.subject,
         quote: email.body.substring(0, 500),
-        confidence: "medium",
         source: "imported",
         createdBy: CREATED_BY,
       },
@@ -299,11 +308,12 @@ async function main() {
     await prisma.oneOnOne.create({
       data: {
         designerId,
-        meetingDate: new Date(note.date),
+        date: new Date(note.date),
         mood,
-        happinessRating,
+        happinessIndex: happinessRating,
         happinessSource: "my_read",
-        rawNotes: note.rawText,
+        topicsDiscussed: note.rawText.substring(0, 800),
+        vibeNotes: note.rawText.substring(0, 400),
         source: "imported",
         createdBy: CREATED_BY,
       },
@@ -314,12 +324,12 @@ async function main() {
 
   // ── 6. Highlights (a few standout moments from the notes) ───────────────────
   const highlights = [
-    { designerName: "Priya Nair", title: "Unsolicited competitive analysis at onboarding kickoff", kind: "standout_work", occurredOn: new Date("2026-01-22") },
-    { designerName: "Rachel Goldstein", title: "Attended sprint planning voluntarily; delivered 3-month insight summary", kind: "community", occurredOn: new Date("2026-01-28") },
-    { designerName: "Amara Diallo", title: "Engineer praise in retro: 'made work feel like a team effort'", kind: "kudos", occurredOn: new Date("2026-02-18") },
-    { designerName: "James Thornton", title: "Advisor user shadowing — unprompted; shaped project direction", kind: "standout_work", occurredOn: new Date("2026-02-28") },
-    { designerName: "Kevin Park", title: "Mobile-first onboarding approach noticed by leadership", kind: "small_win", occurredOn: new Date("2026-02-04") },
-    { designerName: "Daniel Osei", title: "Led token workshop with platform engineering team", kind: "community", occurredOn: new Date("2026-01-28") },
+    { designerName: "Priya Nair", description: "Unsolicited competitive analysis at onboarding kickoff", kind: "standout_work", occurredOn: new Date("2026-01-22") },
+    { designerName: "Rachel Goldstein", description: "Attended sprint planning voluntarily; delivered 3-month insight summary", kind: "community", occurredOn: new Date("2026-01-28") },
+    { designerName: "Amara Diallo", description: "Engineer praise in retro: 'made work feel like a team effort'", kind: "kudos", occurredOn: new Date("2026-02-18") },
+    { designerName: "James Thornton", description: "Advisor user shadowing — unprompted; shaped project direction", kind: "standout_work", occurredOn: new Date("2026-02-28") },
+    { designerName: "Kevin Park", description: "Mobile-first onboarding approach noticed by leadership", kind: "small_win", occurredOn: new Date("2026-02-04") },
+    { designerName: "Daniel Osei", description: "Led token workshop with platform engineering team", kind: "community", occurredOn: new Date("2026-01-28") },
   ];
 
   let highlightCount = 0;
@@ -329,7 +339,7 @@ async function main() {
     await prisma.highlight.create({
       data: {
         designerId,
-        title: h.title,
+        description: h.description,
         kind: h.kind as Parameters<typeof prisma.highlight.create>[0]["data"]["kind"],
         occurredOn: h.occurredOn,
         source: "imported",
@@ -359,7 +369,7 @@ async function main() {
         description: b.description,
         status: "open",
         owner: "you",
-        dueDate: b.dueDate,
+        raisedOn: b.dueDate,
         source: "imported",
         createdBy: CREATED_BY,
       },
@@ -395,7 +405,7 @@ async function main() {
       data: {
         designerId,
         description: a.description,
-        status: new Date(a.dueDate) < new Date("2026-03-01") ? "done" : "open",
+        status: (new Date(a.dueDate) < new Date("2026-03-01") ? "done" : "open") as "done" | "open",
         dueDate: a.dueDate,
         source: "imported",
         createdBy: CREATED_BY,

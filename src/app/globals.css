@@ -48,83 +48,251 @@
   --radius-4xl: calc(var(--radius) * 2.6);
 }
 
+/* ── Apple light-mode design tokens ─────────────────────────────────────── */
 :root {
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
+  /* System background — Apple's grouped bg */
+  --background: oklch(0.965 0.004 265);
+  --foreground: oklch(0.11 0.005 265);   /* #1c1c1e */
+
+  /* Cards — pure white */
   --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
+  --card-foreground: oklch(0.11 0.005 265);
+
+  /* Popovers */
   --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
-  --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
-  --chart-1: oklch(0.87 0 0);
-  --chart-2: oklch(0.556 0 0);
-  --chart-3: oklch(0.439 0 0);
-  --chart-4: oklch(0.371 0 0);
-  --chart-5: oklch(0.269 0 0);
-  --radius: 0.625rem;
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
+  --popover-foreground: oklch(0.11 0.005 265);
+
+  /* Apple blue — #007AFF light mode */
+  --primary: oklch(0.56 0.20 253);
+  --primary-foreground: oklch(1 0 0);
+
+  /* Secondary */
+  --secondary: oklch(0.94 0.004 265);
+  --secondary-foreground: oklch(0.20 0.004 265);
+
+  /* Muted — Apple secondary label */
+  --muted: oklch(0.94 0.004 265);
+  --muted-foreground: oklch(0.52 0.010 265);
+
+  /* Accent */
+  --accent: oklch(0.94 0.004 265);
+  --accent-foreground: oklch(0.20 0.004 265);
+
+  /* Destructive — #FF3B30 */
+  --destructive: oklch(0.62 0.22 27);
+
+  /* Hairline borders */
+  --border: oklch(0 0 0 / 7%);
+  --input: oklch(0 0 0 / 8%);
+  --ring: oklch(0.56 0.20 253);
+
+  /* Charts */
+  --chart-1: oklch(0.56 0.20 253);
+  --chart-2: oklch(0.55 0.17 160);
+  --chart-3: oklch(0.60 0.19 32);
+  --chart-4: oklch(0.52 0.18 310);
+  --chart-5: oklch(0.56 0.16 90);
+
+  /* Generous corners */
+  --radius: 0.875rem;
+
+  /* Sidebar */
+  --sidebar: oklch(1 0 0);
+  --sidebar-foreground: oklch(0.11 0.005 265);
+  --sidebar-primary: oklch(0.56 0.20 253);
+  --sidebar-primary-foreground: oklch(1 0 0);
+  --sidebar-accent: oklch(0.94 0.004 265);
+  --sidebar-accent-foreground: oklch(0.20 0.004 265);
+  --sidebar-border: oklch(0 0 0 / 6%);
+  --sidebar-ring: oklch(0.56 0.20 253);
 }
 
-.dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.205 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.205 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.922 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.556 0 0);
-  --chart-1: oklch(0.87 0 0);
-  --chart-2: oklch(0.556 0 0);
-  --chart-3: oklch(0.439 0 0);
-  --chart-4: oklch(0.371 0 0);
-  --chart-5: oklch(0.269 0 0);
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.556 0 0);
-}
-
+/* ── Base layer ─────────────────────────────────────────────────────────── */
 @layer base {
   * {
     @apply border-border outline-ring/50;
   }
-  body {
-    @apply bg-background text-foreground;
-  }
+
   html {
-    @apply font-sans;
+    /* SF Pro on Apple devices; Inter/system-ui everywhere else */
+    font-family:
+      -apple-system,
+      BlinkMacSystemFont,
+      "SF Pro Text",
+      "SF Pro Display",
+      ui-sans-serif,
+      system-ui,
+      "Helvetica Neue",
+      Arial,
+      sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    font-feature-settings: "kern" 1, "liga" 1, "calt" 1, "ss01" 1;
+  }
+
+  /* Monospace — SF Mono on Apple */
+  code, pre, kbd, samp {
+    font-family:
+      ui-monospace,
+      "SF Mono",
+      "Cascadia Code",
+      "Fira Code",
+      Menlo,
+      Monaco,
+      Consolas,
+      monospace;
+    font-feature-settings: "kern" 0;
+  }
+
+  body {
+    @apply text-foreground;
+    background-color: #f2f2f7;
+    background-image: radial-gradient(
+      ellipse 70% 40% at 60% 0%,
+      rgba(0, 122, 255, 0.04) 0%,
+      transparent 70%
+    );
+    min-height: 100vh;
+    font-size: 15px;        /* SF Pro Text default — slightly smaller than 16px */
+    line-height: 1.47;      /* visionOS body line-height ratio */
+    font-weight: 400;
+    letter-spacing: -0.01em;
+  }
+
+  /* ── SF Pro Display scale — tight tracking for large text ── */
+  h1 {
+    font-size: 2rem;
+    font-weight: 700;
+    line-height: 1.15;
+    letter-spacing: -0.030em;
+  }
+  h2 {
+    font-size: 1.375rem;
+    font-weight: 700;
+    line-height: 1.20;
+    letter-spacing: -0.022em;
+  }
+  h3 {
+    font-size: 1.125rem;
+    font-weight: 600;
+    line-height: 1.25;
+    letter-spacing: -0.016em;
+  }
+  h4 {
+    font-size: 0.9375rem;
+    font-weight: 600;
+    line-height: 1.30;
+    letter-spacing: -0.010em;
+  }
+
+  /* ── All-caps section labels — wider tracking ── */
+  .uppercase, [class*="uppercase"] {
+    letter-spacing: 0.065em;
+    font-weight: 600;
+  }
+
+  /* ── Raw Tailwind colour overrides ── */
+
+  /* White panels → frosted glass */
+  .bg-white {
+    background: rgba(255, 255, 255, 0.78) !important;
+    backdrop-filter: blur(20px) saturate(180%) !important;
+    -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
+  }
+
+  /* Page backgrounds → transparent (body shows through) */
+  .bg-zinc-50 {
+    background: transparent !important;
+  }
+
+  /* Subtle surface */
+  .bg-zinc-100 {
+    background: rgba(0, 0, 0, 0.03) !important;
+  }
+  .bg-zinc-200 {
+    background: rgba(0, 0, 0, 0.06) !important;
+  }
+
+  /* Primary actions → Apple blue */
+  .bg-zinc-900 {
+    background: #007aff !important;
+    color: #fff !important;
+  }
+  .hover\:bg-zinc-800:hover {
+    background: #0071eb !important;
+  }
+
+  /* Hover states */
+  .hover\:bg-zinc-100:hover {
+    background: rgba(0, 0, 0, 0.04) !important;
+  }
+  .hover\:bg-muted\/60:hover {
+    background: rgba(0, 0, 0, 0.03) !important;
+  }
+
+  /* Borders — hairline */
+  .border-zinc-200 {
+    border-color: rgba(0, 0, 0, 0.08) !important;
+  }
+  .border-zinc-100 {
+    border-color: rgba(0, 0, 0, 0.05) !important;
+  }
+
+  /* Text hierarchy — Apple system label colours */
+  .text-zinc-900 { color: #1c1c1e !important; }
+  .text-zinc-800 { color: #2c2c2e !important; }
+  .text-zinc-700 { color: #3a3a3c !important; }
+  .text-zinc-600 { color: rgba(60, 60, 67, 0.75) !important; }
+  .text-zinc-500 { color: rgba(60, 60, 67, 0.55) !important; }
+  .text-zinc-400 { color: rgba(60, 60, 67, 0.40) !important; }
+  .text-zinc-300 { color: rgba(60, 60, 67, 0.28) !important; }
+  .text-white    { color: #ffffff !important; }
+
+  /* Status tints — light, very low opacity */
+  .bg-green-50    { background: rgba(52, 199, 89, 0.09) !important; }
+  .text-green-700 { color: #1d8348 !important; }
+  .bg-amber-50    { background: rgba(255, 159, 10, 0.09) !important; }
+  .text-amber-700 { color: #b7600a !important; }
+  .bg-red-50      { background: rgba(255, 59, 48, 0.09) !important; }
+  .text-red-700   { color: #c0392b !important; }
+  .bg-blue-50     { background: rgba(0, 122, 255, 0.08) !important; }
+  .text-blue-700  { color: #0057c2 !important; }
+
+  /* ── Recharts light mode ── */
+  .recharts-text,
+  .recharts-label,
+  .recharts-cartesian-axis-tick-value {
+    fill: rgba(60, 60, 67, 0.55) !important;
+  }
+  .recharts-cartesian-grid line {
+    stroke: rgba(0, 0, 0, 0.06) !important;
+  }
+  .recharts-legend-item-text {
+    color: rgba(60, 60, 67, 0.65) !important;
+  }
+
+  /* ── Dividers ── */
+  .divide-zinc-200 > * + * {
+    border-color: rgba(0, 0, 0, 0.06) !important;
+  }
+
+  /* ── Subtle shadows on glass panels ── */
+  .bg-white.rounded-xl,
+  .bg-white.rounded-2xl {
+    box-shadow:
+      0 1px 2px rgba(0, 0, 0, 0.04),
+      0 4px 16px rgba(0, 0, 0, 0.05) !important;
+  }
+
+  /* ── Scrollbar ── */
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.14);
+    border-radius: 3px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 0, 0, 0.22);
   }
 }
