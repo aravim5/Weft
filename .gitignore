@@ -55,3 +55,7 @@ emails/
 *.log
 seed/real/
 docs/BEDROCK_UPGRADE.md
+
+# dev server artifacts
+dev-server.log
+dev-server.pid
