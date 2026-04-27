@@ -63,11 +63,11 @@ export async function GET(
       include: { partner: { select: { fullName: true } } },
     }),
 
-    // Highlights (wins, last 60d)
+    // Highlights + wins (last 60d)
     db.highlight.findMany({
       where: { designerId: id, archivedAt: null, occurredOn: { gte: sixtyDaysAgo } },
       orderBy: { occurredOn: "desc" },
-      select: { id: true, kind: true, description: true, occurredOn: true },
+      select: { id: true, kind: true, size: true, description: true, occurredOn: true, evidenceLink: true },
     }),
 
     // Latest open cycle review
@@ -80,11 +80,14 @@ export async function GET(
       },
     }),
 
-    // Open blockers
+    // Open blockers (with project name)
     db.blocker.findMany({
       where: { designerId: id, archivedAt: null, status: "open" },
       orderBy: { raisedOn: "desc" },
-      select: { id: true, description: true, raisedOn: true, owner: true, projectId: true },
+      select: {
+        id: true, description: true, raisedOn: true, owner: true, projectId: true,
+        project: { select: { id: true, projectName: true } },
+      },
     }),
 
     // Open action items for this designer
@@ -204,7 +207,9 @@ export async function GET(
       })),
       total: recentFeedback.length,
     },
-    highlights: recentHighlights,
+    // Wins (kind = small_win | big_win) split from other highlights
+    wins: recentHighlights.filter((h) => h.kind === "small_win" || h.kind === "big_win"),
+    highlights: recentHighlights.filter((h) => h.kind !== "small_win" && h.kind !== "big_win"),
     currentCycleReview,
     openBlockers,
     openActionItems,

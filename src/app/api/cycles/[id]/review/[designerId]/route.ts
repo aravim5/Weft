@@ -29,7 +29,76 @@ async function getOrCreate(cycleId: string, designerId: string) {
 export async function GET(_req: NextRequest, { params }: Params) {
   const { id: cycleId, designerId } = await params;
   const review = await getOrCreate(cycleId, designerId);
-  return NextResponse.json({ data: review });
+
+  const [designer, cycle, rubric] = await Promise.all([
+    db.designer.findUnique({
+      where: { id: designerId },
+      select: { id: true, fullName: true, preferredName: true, level: true, discipline: true, productArea: true, startDate: true, managerName: true },
+    }),
+    db.reviewCycle.findUnique({ where: { id: cycleId } }),
+    db.rubric.findFirst({ orderBy: { createdAt: "desc" }, select: { version: true, dimensions: true } }),
+  ]);
+
+  if (!designer || !cycle) return NextResponse.json({ error: "Not found" }, { status: 404 });
+
+  const qIdx = ["Q1", "Q2", "Q3", "Q4"].indexOf(cycle.quarter);
+  const cycleStart = new Date(cycle.year, qIdx * 3, 1);
+  const cycleEnd = new Date(cycle.year, (qIdx + 1) * 3, 0);
+
+  const [impactEntries, feedback, oneOnOnes, highlights, openRiskSignals, teamConcerns, outreach] = await Promise.all([
+    db.impactEntry.findMany({
+      where: { designerId, archivedAt: null, date: { gte: cycleStart, lte: cycleEnd } },
+      orderBy: { date: "desc" },
+      select: { id: true, summary: true, dimension: true, magnitude: true, date: true, projectId: true },
+    }),
+    db.feedback.findMany({
+      where: { designerId, archivedAt: null, occurredOn: { gte: cycleStart, lte: cycleEnd } },
+      orderBy: { occurredOn: "desc" },
+      include: { partner: { select: { fullName: true, role: true } } },
+    }),
+    db.oneOnOne.findMany({
+      where: { designerId, archivedAt: null, date: { gte: cycleStart, lte: cycleEnd } },
+      orderBy: { date: "desc" },
+      select: { id: true, date: true, topicsDiscussed: true, happinessIndex: true },
+    }),
+    db.highlight.findMany({
+      where: { designerId, archivedAt: null, occurredOn: { gte: cycleStart, lte: cycleEnd } },
+      orderBy: { occurredOn: "desc" },
+      select: { id: true, kind: true, size: true, description: true, occurredOn: true },
+    }),
+    db.riskSignal.findMany({
+      where: { designerId, archivedAt: null, status: "open" },
+      select: { id: true, signalType: true, severity: true, evidence: true },
+    }),
+    db.teamConcern.findMany({
+      where: { raisedByDesignerId: designerId, archivedAt: null, createdAt: { gte: cycleStart, lte: cycleEnd } },
+      select: { id: true, concern: true, theme: true, severity: true },
+    }),
+    db.outreach.findMany({
+      where: { cycleId, designerId },
+      select: { id: true, status: true, partner: { select: { fullName: true, role: true } }, sentOn: true, responseReceivedOn: true },
+    }),
+  ]);
+
+  return NextResponse.json({
+    data: review,
+    designer,
+    cycle: { id: cycle.id, quarter: cycle.quarter, year: cycle.year, checkinDate: cycle.checkinDate, status: cycle.status },
+    rubric,
+    evidence: {
+      impactEntries,
+      feedback: feedback.map((f) => ({
+        id: f.id, summary: f.summary, quote: f.quote, sentiment: f.sentiment,
+        theme: f.theme, occurredOn: f.occurredOn, source: f.source,
+        partnerName: f.partner?.fullName ?? null, partnerRole: f.partner?.role ?? null,
+      })),
+      oneOnOnes,
+      highlights,
+      openRiskSignals,
+      teamConcerns,
+      outreach,
+    },
+  });
 }
 
 export async function POST(_req: NextRequest, { params }: Params) {

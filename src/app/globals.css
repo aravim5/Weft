@@ -1,6 +1,6 @@
+@import "../styles/tokens.css";
 @import "tailwindcss";
 @import "tw-animate-css";
-@import "shadcn/tailwind.css";
 
 @custom-variant dark (&:is(.dark *));
 
@@ -50,61 +50,61 @@
 
 /* ── Apple light-mode design tokens ─────────────────────────────────────── */
 :root {
-  /* System background — Apple's grouped bg */
-  --background: oklch(0.965 0.004 265);
-  --foreground: oklch(0.11 0.005 265);   /* #1c1c1e */
+  /* Map app tokens to centralized tokens (keeps existing var names working) */
+  --background: var(--bg-main);
+  --foreground: var(--text-primary);
 
   /* Cards — pure white */
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.11 0.005 265);
+  --card: var(--bg-surface);
+  --card-foreground: var(--text-primary);
 
   /* Popovers */
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.11 0.005 265);
+  --popover: var(--bg-surface);
+  --popover-foreground: var(--text-primary);
 
-  /* Apple blue — #007AFF light mode */
-  --primary: oklch(0.56 0.20 253);
+  /* Primary accent */
+  --primary: var(--primary-accent);
   --primary-foreground: oklch(1 0 0);
 
   /* Secondary */
-  --secondary: oklch(0.94 0.004 265);
-  --secondary-foreground: oklch(0.20 0.004 265);
+  --secondary: var(--border-subtle);
+  --secondary-foreground: var(--text-secondary);
 
-  /* Muted — Apple secondary label */
-  --muted: oklch(0.94 0.004 265);
-  --muted-foreground: oklch(0.52 0.010 265);
+  /* Muted */
+  --muted: var(--border-subtle);
+  --muted-foreground: var(--text-secondary);
 
   /* Accent */
-  --accent: oklch(0.94 0.004 265);
-  --accent-foreground: oklch(0.20 0.004 265);
+  --accent: var(--primary-accent);
+  --accent-foreground: var(--primary-accent-hover);
 
-  /* Destructive — #FF3B30 */
-  --destructive: oklch(0.62 0.22 27);
+  /* Destructive */
+  --destructive: #ff3b30;
 
   /* Hairline borders */
-  --border: oklch(0 0 0 / 7%);
-  --input: oklch(0 0 0 / 8%);
-  --ring: oklch(0.56 0.20 253);
+  --border: var(--border-color);
+  --input: rgba(0,0,0,0.08);
+  --ring: var(--primary-accent);
 
   /* Charts */
-  --chart-1: oklch(0.56 0.20 253);
-  --chart-2: oklch(0.55 0.17 160);
-  --chart-3: oklch(0.60 0.19 32);
-  --chart-4: oklch(0.52 0.18 310);
-  --chart-5: oklch(0.56 0.16 90);
+  --chart-1: var(--primary-accent);
+  --chart-2: #2bb3c0;
+  --chart-3: var(--status-working);
+  --chart-4: #b06adf;
+  --chart-5: #b9d76b;
 
-  /* Generous corners */
-  --radius: 0.875rem;
+  /* Generous corners mapped from tokens */
+  --radius: var(--radius-md);
 
   /* Sidebar */
-  --sidebar: oklch(1 0 0);
-  --sidebar-foreground: oklch(0.11 0.005 265);
-  --sidebar-primary: oklch(0.56 0.20 253);
-  --sidebar-primary-foreground: oklch(1 0 0);
-  --sidebar-accent: oklch(0.94 0.004 265);
-  --sidebar-accent-foreground: oklch(0.20 0.004 265);
-  --sidebar-border: oklch(0 0 0 / 6%);
-  --sidebar-ring: oklch(0.56 0.20 253);
+  --sidebar: var(--bg-sidebar);
+  --sidebar-foreground: var(--text-sidebar);
+  --sidebar-primary: var(--primary-accent);
+  --sidebar-primary-foreground: var(--text-sidebar);
+  --sidebar-accent: var(--border-subtle);
+  --sidebar-accent-foreground: var(--text-secondary);
+  --sidebar-border: rgba(0,0,0,0.06);
+  --sidebar-ring: var(--primary-accent);
 }
 
 /* ── Base layer ─────────────────────────────────────────────────────────── */
@@ -191,8 +191,10 @@
     letter-spacing: 0.065em;
     font-weight: 600;
   }
+}
 
-  /* ── Raw Tailwind colour overrides ── */
+/* ── Raw Tailwind colour overrides ─────────────────────────────────────── */
+/* Outside @layer base so !important reliably wins over utility classes. */
 
   /* White panels → frosted glass */
   .bg-white {
@@ -295,4 +297,3 @@
   ::-webkit-scrollbar-thumb:hover {
     background: rgba(0, 0, 0, 0.22);
   }
-}

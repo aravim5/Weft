@@ -380,14 +380,13 @@ function Stage5Summarize({ data, reload }: { data: PageData; reload: () => void 
                           onClick={() => generate(d.id)} disabled={generating === d.id}>
                           {generating === d.id ? "Generating…" : hasDraft ? "Regenerate" : "Generate review"}
                         </Button>
-                        {hasDraft && (
-                          <Button size="sm" className="h-7 text-xs px-2"
-                            onClick={() => signOff(d.id)} disabled={signingOff === d.id}>
-                            {signingOff === d.id ? "Saving…" : "Sign off"}
-                          </Button>
-                        )}
                       </>
                   }
+                  <Link href={`/cycles/${cycle.id}/review/${d.id}`}>
+                    <Button size="sm" className="h-7 text-xs px-2" variant={isSignedOff ? "outline" : "default"}>
+                      {isSignedOff ? "View" : hasDraft ? "Edit & sign off" : "Open"}
+                    </Button>
+                  </Link>
                 </div>
               </CardHeader>
               {hasDraft && !isSignedOff && (
