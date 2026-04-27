@@ -4,14 +4,8 @@ import crypto from "crypto";
 import fs from "fs";
 import path from "path";
 import { PrismaClient } from "@prisma/client";
-import { PrismaBetterSqlite3 } from "@prisma/adapter-better-sqlite3";
 
-const dbUrl = process.env.DATABASE_URL ?? "file:./data/data.db";
-const dbPath = dbUrl.replace(/^file:/, "");
-const absolutePath = path.isAbsolute(dbPath) ? dbPath : path.join(process.cwd(), dbPath);
-
-const adapter = new PrismaBetterSqlite3({ url: absolutePath });
-const prisma = new PrismaClient({ adapter } as Parameters<typeof PrismaClient>[0]);
+const prisma = new PrismaClient();
 
 const SEED_DIR = path.join(process.cwd(), "seed/synthetic");
 const CREATED_BY = "seed-synthetic";
